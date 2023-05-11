@@ -9,12 +9,14 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     Button First_Button;
+    Button Second_Button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         First_Button = findViewById(R.id.First_Button);
+        Second_Button = findViewById(R.id.Second_Button);
 
         First_Button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -24,11 +26,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        Second_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SecondBook_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
-
-
-
-
 
 }

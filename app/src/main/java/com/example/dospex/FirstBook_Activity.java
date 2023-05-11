@@ -14,9 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -67,20 +64,8 @@ public class FirstBook_Activity extends AppCompatActivity {
     private ParcelFileDescriptor descriptor;
     private float currentZoomLevel = 5;
 
-    @Override public void onStart() {
-        super.onStart();
-
-    }
-
     private void openPdfRenderer() {
         File file = new File("raw/first.pdf");
-        try(OutputStream outputStream = new FileOutputStream(file)){
-            IOUtils.copy(getResources().openRawResource(R.raw.first), outputStream);
-        } catch (FileNotFoundException e) {
-            // handle exception here
-        } catch (IOException e) {
-            // handle exception here
-        }
         descriptor = null;
         pdfRenderer = null;
         try {
