@@ -6,27 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".SecondBook_Activity">
 
-
     <EditText
         android:id="@+id/editText_SecondBook"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:gravity="bottom|center|start|top"
-        android:padding="8dp"
         android:hint="Руководство по устранению неисправностей"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton_F2"
-        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintVertical_bias="0.005" />
 
     <ImageButton
         android:id="@+id/imageButton_F2"
         android:layout_width="49dp"
         android:layout_height="49dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -60,6 +58,13 @@
             android:layout_weight="1"
             android:background="@null"
             android:text="Назад" />
+
+        <Button
+            android:id="@+id/btnUp_F2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Оглавление" />
 
         <Button
             android:id="@+id/btnNext_F2"

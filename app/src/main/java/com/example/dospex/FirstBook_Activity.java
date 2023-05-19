@@ -1,128 +1,143 @@
 package com.example.dospex;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.pdf.PdfRenderer;
-import android.net.Uri;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 
 public class FirstBook_Activity extends AppCompatActivity {
-    private String path;
-    private ImageView imgView_FirstBook;
-    private Button btnPrevious_F1, btnNext_F1;
+
+    private PDFView imgView_FirstBook;
+    private Button btnPrevious_F1;
+    private Button btnNext_F1;
+
+    private Button btnUp_F1;
+
+    private EditText editText;
+
+    private ImageButton btnFind_F1;
     private int currentPage = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_book);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
-        try {
-            openPdfRenderer();
-            displayPage(currentPage);
-        } catch (Exception e) {
-            Toast.makeText(this, "PDF-файл защищен паролем.", Toast.LENGTH_SHORT).show();
-        }
-
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        currentPage = sharedPreferences.getInt("PAGE_F1", 0);
         imgView_FirstBook = findViewById(R.id.imgView_FirstBook);
+        initBook();
+        btnUp_F1 = findViewById(R.id.btnUp_F1);
         btnPrevious_F1 = findViewById(R.id.btnPrevious_F1);
         btnPrevious_F1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = curPage.getIndex() - 1;
-                displayPage(index);
+                int page = currentPage - 1;
+                if (page < 0) {
+                    Toast.makeText(FirstBook_Activity.this, "Это первая страница", Toast.LENGTH_SHORT).show();
+                } else {
+                    currentPage--;
+                    initBook();
+                }
             }
         });
+
+        btnUp_F1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentPage = 2;
+                initBook();
+            }
+        });
+
+        btnFind_F1 = findViewById(R.id.imageButton_F1);
+
+        editText = findViewById(R.id.editText_FirstBook);
+
+        btnFind_F1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean is_String  = true;
+                int target_page = 0;
+                String string = editText.getText().toString().trim();
+
+                try {
+                    target_page = Integer.parseInt(string);
+                    is_String = false;
+                }
+                catch (Exception e) {
+                    is_String = true;
+                }
+
+                if (!is_String) {
+                    currentPage = target_page / 2;
+                    initBook();
+                } else {
+                    Toast.makeText(FirstBook_Activity.this, "uwgbebwuige", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
         btnNext_F1 = findViewById(R.id.btnNext_F1);
         btnNext_F1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = curPage.getIndex() + 1;
-                displayPage(index);
+                int page = currentPage + 1;
+                if (page > imgView_FirstBook.getPageCount()) {
+                    Toast.makeText(FirstBook_Activity.this, "Это последняя страница", Toast.LENGTH_SHORT).show();
+                } else {
+                    currentPage++;
+                    initBook();
+                }
             }
         });
     }
 
-    private PdfRenderer pdfRenderer;
-    private PdfRenderer.Page curPage;
-    private ParcelFileDescriptor descriptor;
-    private float currentZoomLevel = 5;
-
-    private void openPdfRenderer() {
-        File file = new File("raw/first.pdf");
-        descriptor = null;
-        pdfRenderer = null;
-        try {
-            descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-            pdfRenderer = new PdfRenderer(descriptor);
-        } catch (Exception e) {
-            Toast.makeText(this, "Ошибка", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void displayPage(int index) {
-        if (pdfRenderer.getPageCount() <= index) return;
-        // закрываем текущую страницу
-        if (curPage != null) curPage.close();
-        // открываем нужную страницу
-        curPage = pdfRenderer.openPage(index);
-        // определяем размеры Bitmap
-        int newWidth = (int) (getResources().getDisplayMetrics().widthPixels * curPage.getWidth() / 72
-                * currentZoomLevel / 40);
-        int newHeight =
-                (int) (getResources().getDisplayMetrics().heightPixels * curPage.getHeight() / 72
-                        * currentZoomLevel / 64);
-        Bitmap bitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
-        Matrix matrix = new Matrix();
-        float dpiAdjustedZoomLevel = currentZoomLevel * DisplayMetrics.DENSITY_MEDIUM
-                / getResources().getDisplayMetrics().densityDpi;
-        matrix.setScale(dpiAdjustedZoomLevel, dpiAdjustedZoomLevel);
-        curPage.render(bitmap, null, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-        // отображаем результат рендера
-        imgView_FirstBook.setImageBitmap(bitmap);
-        // проверяем, нужно ли делать кнопки недоступными
-        int pageCount = pdfRenderer.getPageCount();
-        btnPrevious_F1.setEnabled(0 != index);
-        btnNext_F1.setEnabled(index + 1 < pageCount);
-    }
-
     @Override protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (curPage != null) {
-            outState.putInt("currentPage", curPage.getIndex());
-        }
+        outState.putInt("currentPage", currentPage);
     }
 
-    @Override public void onDestroy() {
-        try {
-            closePdfRenderer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        super.onDestroy();
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentPage = savedInstanceState.getInt("currentPage");
+        initBook();
     }
 
-    private void closePdfRenderer() throws IOException {
-        if (curPage != null) curPage.close();
-        if (pdfRenderer != null) pdfRenderer.close();
-        if (descriptor != null) descriptor.close();
+    private void initBook() {
+        imgView_FirstBook.fromAsset("first.pdf")
+                .defaultPage(currentPage)
+                .enableDoubletap(true)
+                .enableSwipe(true)
+                .onPageChange(new OnPageChangeListener() {
+                    @Override
+                    public void onPageChanged(int page, int pageCount) {
+                        currentPage = page;
+                    }
+                })
+                .load();
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("PAGE_F1", currentPage);
+        editor.apply();
+    }
 }

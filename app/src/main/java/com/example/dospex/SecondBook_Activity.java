@@ -21,6 +21,8 @@ public class SecondBook_Activity extends AppCompatActivity {
     private Button btnPrevious_F2;
     private Button btnNext_F2;
 
+    private Button btnUp_F2;
+
     private EditText editText;
 
     private ImageButton btnFind_F2;
@@ -33,11 +35,21 @@ public class SecondBook_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_second_book);
 
         SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        currentPage = sharedPreferences.getInt("PAGE", 0);
+        currentPage = sharedPreferences.getInt("PAGE_F2", 0);
         imgView_SecondBook = findViewById(R.id.imgView_SecondBook);
         initBook();
 
         btnPrevious_F2 = findViewById(R.id.btnPrevious_F2);
+
+        btnUp_F2 = findViewById(R.id.btnUp_F2);
+
+        btnUp_F2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentPage = 371;
+                initBook();
+            }
+        });
         btnPrevious_F2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +139,7 @@ public class SecondBook_Activity extends AppCompatActivity {
         super.onStop();
         SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("PAGE", currentPage);
+        editor.putInt("PAGE_F2", currentPage);
         editor.apply();
     }
 }
