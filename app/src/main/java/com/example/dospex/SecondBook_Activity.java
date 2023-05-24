@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SecondBook_Activity extends AppCompatActivity {
 
@@ -28,6 +30,7 @@ public class SecondBook_Activity extends AppCompatActivity {
     private ImageButton btnFind_F2;
     private int currentPage = 0;
 
+    private FloatingActionButton floatingActionButton_F2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,18 @@ public class SecondBook_Activity extends AppCompatActivity {
         imgView_SecondBook = findViewById(R.id.imgView_SecondBook);
         initBook();
 
+        floatingActionButton_F2 = findViewById(R.id.floatingActionButton_F2);
+
+        floatingActionButton_F2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SecondBook_Activity.this, Add_Activity.class);
+                intent.putExtra("Book_Name", "Руководство по войсковому ремонту Часть 1");
+                intent.putExtra("Page_Count", currentPage);
+                startActivity(intent);
+            }
+        });
+
         btnPrevious_F2 = findViewById(R.id.btnPrevious_F2);
 
         btnUp_F2 = findViewById(R.id.btnUp_F2);
@@ -46,7 +61,7 @@ public class SecondBook_Activity extends AppCompatActivity {
         btnUp_F2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPage = 371;
+                currentPage = 257;
                 initBook();
             }
         });

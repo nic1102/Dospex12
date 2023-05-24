@@ -12,6 +12,15 @@
         android:theme="@style/Theme.Dospex"
         tools:targetApi="31">
         <activity
+            android:name=".Note_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".Add_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".ThirdBook_Activity"
+            android:exported="false" />
+        <activity
             android:name=".SecondBook_Activity"
             android:exported="false" />
         <activity

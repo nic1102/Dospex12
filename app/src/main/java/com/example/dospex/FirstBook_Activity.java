@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class FirstBook_Activity extends AppCompatActivity {
 
@@ -28,6 +30,8 @@ public class FirstBook_Activity extends AppCompatActivity {
     private ImageButton btnFind_F1;
     private int currentPage = 0;
 
+    private FloatingActionButton floatingActionButton_F1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,18 @@ public class FirstBook_Activity extends AppCompatActivity {
         initBook();
         btnUp_F1 = findViewById(R.id.btnUp_F1);
         btnPrevious_F1 = findViewById(R.id.btnPrevious_F1);
+
+        floatingActionButton_F1 = findViewById(R.id.floatingActionButton_F1);
+
+        floatingActionButton_F1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FirstBook_Activity.this, Add_Activity.class);
+                intent.putExtra("Book_Name", "Руководство по устранению неисправностей");
+                intent.putExtra("Page_Count", currentPage);
+                startActivity(intent);
+            }
+        });
         btnPrevious_F1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
